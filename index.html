@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>js lines</title>
+</head>
+<body>
+    <div>胜: <input type="text" name="a"></div>
+    <div>平: <input type="text" name="b"></div>
+    <div>负: <input type="text" name="c"></div>
+    <div>总共要投入的资金（元）: <input type="text" name="total"></div>
+    <div><button id="submit">确定</button></div>
+    <script>
+        var a = document.querySelector('[name=a]'),
+        b = document.querySelector('[name=b]'),
+        c = document.querySelector('[name=c]'),
+        total = document.querySelector('[name=total]'),
+        subButton = document.querySelector("#submit");
+
+
+        var x, y, z;
+        subButton.addEventListener('click', function() {
+         var win = toFloat(a.value);
+         var flat = toFloat(b.value);
+         var defeat = toFloat(c.value);
+         var tvalue = parseInt(total.value);
+         var max = 0;
+         var temp = [];
+         let tempMin = 0;
+         var maxXYZ = [];
+         for (var i =0; i<= 10; i+=0.01) {
+            for (var j = 0; j<= 10; j+=0.01) {
+              x = i; y=j; z = 10 -x -y;
+              if (z >= 0) {
+                temp = [win * x - 10, y * flat - 10, defeat * z - 10];
+                if (temp[0] > 0 && temp[1]>0 && temp[2] >0 ) {
+                    console.log(temp);
+                    tempMin = temp[0] < temp[1] ? (temp[0] < temp[2] ? temp[0] : temp[2]) : (temp[1] < temp[2] ? temp[1] : temp[2]);
+                    max > tempMin ? '' : (max = tempMin, maxXYZ = [x, y, z]);
+                }
+              }
+            }
+         }
+        })
+
+
+        function toFloat (val) {
+            return parseInt(val * 100) / 100;
+        }
+    </script>
+</body>
+</html>
