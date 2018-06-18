@@ -10,12 +10,14 @@
     <div>胜: <input type="text" name="a"></div>
     <div>平: <input type="text" name="b"></div>
     <div>负: <input type="text" name="c"></div>
+    <div>接受亏损范围: <input type="text" name="d">%</div>
     <div>总共要投入的资金（元）: <input type="text" name="total"></div>
     <div><button id="submit">确定</button></div>
     <script>
         var a = document.querySelector('[name=a]'),
         b = document.querySelector('[name=b]'),
         c = document.querySelector('[name=c]'),
+        d = document.querySelector('[name=d]'),
         total = document.querySelector('[name=total]'),
         subButton = document.querySelector("#submit");
 
@@ -25,24 +27,41 @@
          var win = toFloat(a.value);
          var flat = toFloat(b.value);
          var defeat = toFloat(c.value);
+         var dvalue = toFloat(d.value);
          var tvalue = parseInt(total.value);
+         
+         dvalue > 100 && (dvalue = 100);
+         dvalue < 0 && (dvalue = 0);
+         // 至少保本的本金
+         var baseNum = ((100 - dvalue) / 100) * 10;
          var max = 0;
          var temp = [];
          let tempMin = 0;
          var maxXYZ = [];
+         var wfd = [];
          for (var i =0; i<= 10; i+=0.01) {
             for (var j = 0; j<= 10; j+=0.01) {
               x = i; y=j; z = 10 -x -y;
               if (z >= 0) {
-                temp = [win * x - 10, y * flat - 10, defeat * z - 10];
-                if (temp[0] > 0 && temp[1]>0 && temp[2] >0 ) {
-                    console.log(temp);
+                temp = [win * x - baseNum, y * flat - baseNum, defeat * z - baseNum];
+                if (temp[0] > 0 && temp[1] > 0 && temp[2] > 0 ) {
                     tempMin = temp[0] < temp[1] ? (temp[0] < temp[2] ? temp[0] : temp[2]) : (temp[1] < temp[2] ? temp[1] : temp[2]);
-                    max > tempMin ? '' : (max = tempMin, maxXYZ = [x, y, z]);
-                }
+                    max > tempMin ? '' : (max = tempMin, maxXYZ = [x, y, z], wfd = temp.slice(0));
+                } 
               }
             }
          }
+         var ratio = tvalue / 10;
+         maxXYZ =  maxXYZ.map(item => {
+            return ratio * item;
+         })
+
+         wfd =  wfd.map(item => {
+            return ratio * item;
+         })
+
+         max = max * ratio;
+         console.log(max, maxXYZ, wfd);
         })
 
 
